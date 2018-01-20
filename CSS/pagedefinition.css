@@ -1,0 +1,134 @@
+.pat{
+    padding:20px; 
+    cursor:pointer; 
+    background-image:linear-gradient(#E1EAF2,#CDDCE9); 
+    margin-right:10px; 
+    font-size:18px;
+    transition:0.25s;
+}
+
+.pat:hover{
+    color:#E1EAF2; 
+    background-image:linear-gradient(#33577B,#26415B);
+    transition:0.25s;
+}
+
+.selectMenu{
+    color:#fff;
+    background-color:#449d44;
+    border-radius:2px;
+}
+
+.menB:hover{
+    transition:0.25s;
+    background-color:#C4D5E6;
+    border-radius:2px;
+}
+
+.hidethis{
+    display:block
+}
+
+.showthis{
+    display:hidden;
+}
+
+body{
+    font-family: 'Open Sans', sans-serif;
+}
+
+.miniLinks{
+    margin:6px;
+    height:20px;
+    cursor: pointer;
+    padding:10px;
+    padding-bottom:8px;
+    border-radius:2px;
+    font-weight: 500;
+    font-size:14px;
+    font-family: verdana;
+}
+
+img {
+    filter: gray;
+    filter: brightness(10);
+    border-radius:4px;
+}
+img:hover {
+     -webkit-filter: grayscale(10px);
+     filter: blur(20px);
+     transition:0.25s;
+}
+
+.miniLinks:hover{
+    padding-bottom:8px;
+    border-bottom-color: #6995BF;
+    border-bottom-style: dotted;
+    border-bottom-width:thin;
+    transition:0.25s;
+    color:#000;
+    background-color:#EDF2F8;
+}
+.activeMini{
+    padding-bottom:8px;
+    border-bottom-color: #6995BF;
+    border-bottom-style: dotted;
+    border-bottom-width:thin;
+    transition:0.25s;
+    color:#000;
+    background-color:#D3E0ED;
+}
+
+li{
+    list-style:cross-fade;
+}
+
+.margin-top-20{
+    margin-top: 20px;
+}
+
+.cursorpointer{
+    cursor:pointer;
+}
+.padding-10{
+    padding:10px;
+}
+.margin-right-10{
+    margin-right:10px
+}
+.dottedborder{
+    border-style:dotted;
+    border-width:medium;
+    border-color:#E4E4E4;
+}
+.lightgreybackground{
+    border-style:dotted; 
+    border-color: #E4E4E4; 
+    margin-top:15px; 
+    background-color:#F8F8F8; 
+    border-width:thin; 
+    padding:25px; 
+    line-height: 180%; 
+    min-height:200px;
+    height:auto;
+}
+.makelink{
+    cursor:pointer;
+}
+
+.computeBMI{
+    padding:10px;
+    background-color: #23527c;
+    color:#fff;
+    font-weight:bold;
+    border-radius:4px
+}
+
+.greencolor{
+    color:green; 
+    font-weight:bold;
+}
+.redcolor{
+    color:red; 
+    font-weight:bold;
+}
