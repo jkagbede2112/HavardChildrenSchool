@@ -10,7 +10,7 @@ include 'databaseSQLconnectn.php';
 
 $tid = $_POST['tID'];
 
-$uasd = mysqli_query($w,"delete from cts where TeacherID='$tid'");
+$uasd = mysqli_query($w,"delete from schstaff where StaffID ='$tid'");
 if ($uasd){
     echo "Removed";
 }else{

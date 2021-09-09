@@ -8,8 +8,12 @@ include 'databaseSQLconnectn.php';
  */
 session_start();
 $recipientID = $_SESSION['Role'];
-$parentID = $_SESSION['ParentID'];
+if (isset($_SESSION['parentID'])){
+    $parentID = $_SESSION['ParentID'];
+}
+//
 //echo $recipientID;
+echo $recipientID;
 $getsenderid = mysqli_query($w,"select * from portalmessage where Recipient='$recipientID' order by SN desc");
 
 while ($get = mysqli_fetch_array($getsenderid)) {

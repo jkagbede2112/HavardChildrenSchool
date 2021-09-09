@@ -8,7 +8,7 @@ try {
     $who = $_SESSION['Role'];
     //echo $who . " - ";
     $query = mysqli_query($w,"select * from linkages where ParentID = '$parentID'");
-    $query1 = mysqli_query($w,"select * from linkages where ParentID = '$parentID' and status = '1'");
+    $query1 = mysqli_query($w,"select * from linkages");
     $query2 = mysqli_query($w,"select * from schstudent");
     $query3 = mysqli_query($w,"select * from cts");
     $query4 = mysqli_query($w,"select * from parentsregister");

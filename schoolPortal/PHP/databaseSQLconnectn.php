@@ -1,13 +1,7 @@
 <?php
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/*
-mysql_connect("localhost","ogooluwa","6z7L9it2zH") or die ("<center><font style='color:red'><b>Cannot find host</b></font></center>");
-mysql_select_db("ogooluwa_OOMC") or die ("<center><font style='color:red'><b>Cannot locate database</b></font></center>");
-*/
-mysql_connect("localhost","root","") or die ("<center><font style='color:red'><b>Cannot find host</b></font></center>");
-mysql_select_db("schoolportal") or die ("<center><font style='color:red'><b>Cannot locate database</b></font></center>");
+$w = mysqli_connect("localhost", "root", "", "hcs_college") or die("Bad DB string");
+
+$schoolname = "Havard Children School";
+$schooladdress = "Plot 38, Aribido Onbola Street, Km 32 Along Lagos-Ibadan Express Way, Arepo, Ogun State";
+

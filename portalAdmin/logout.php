@@ -2,7 +2,7 @@
 session_start();
 $f = $_SESSION['Role'];
 session_destroy();
-header("Location:loginpane.php");
+header("Location:index.php");
 
 /* 
  * To change this license header, choose License Headers in Project Properties.

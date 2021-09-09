@@ -1,0 +1,48 @@
+.pad10{
+    padding:10px;
+}
+
+.pad2{
+    padding:2px;
+}
+
+.bp{
+    cursor:pointer; 
+    padding:5px;
+    background-color:rgba(0,0,0,0.2);
+    border-radius:2px;
+    color:#fff;
+}
+
+.bp:hover{
+    background-color:rgba(0,0,0,0.4);
+    transition: 0.5s;
+}
+
+.bpactive{
+    background-color:#005E8A !important;
+}
+
+.w30{
+    width:30px;
+}
+
+.fcr{
+    width:30px; 
+    padding:4px;
+}
+
+.netbgand{
+    background-image: url('images/units.jpg');
+}
+
+.tcmnt{
+    border-bottom-style:dashed; 
+    border-bottom-width:thin;
+    height:15px;
+    font-size:14px;
+}
+
+.pdfive{
+    padding:5px;
+}

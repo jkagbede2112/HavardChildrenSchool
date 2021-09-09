@@ -8,29 +8,25 @@ include 'databaseSQLconnectn.php';
  */
 
 $studentID = $_POST['studentID'];
-$retrieval = mysql_query("select * from schstudent where StudentID ='$studentID'");
-
-if (mysql_num_rows($retrieval) > 0) {
-    $pull = mysql_fetch_array($retrieval);
+$retrieval = mysqli_query($w,"select * from schstudent where StudentID ='$studentID'");
+$c = mysqli_num_rows($retrieval);
+echo "Yes.. this too shall pass";
+if ( $c > 0) {
+    $pull = mysqli_fetch_array($retrieval);
     $studentName = $pull['StudentName'];
-    $firstname = $pull['Firstname'];
-    $lastname = $pull['Surname'];
     $classID = $pull['ClassID'];
+    $classTeacherID = $pull['TeacherID'];
     
-    //Get Attached class teacher..
-    $f = mysql_query("select ClassTeacher from schclass where ClassName ='$classID'");
-    $g = mysql_fetch_array($f);
-    $tID = $g['ClassTeacher'];
-    
-    $g = mysql_query("select * from schstaff where StaffID = '$tID'");
-    $ga = mysql_fetch_array($g);
-    $TeacherN = $ga['StaffName'];
-    $TeacherE = $ga['StaffEmail'];
+    $cst = mysqli_query($w,"select * from cts where TeacherID ='$classTeacherID'");
+    $f = mysqli_fetch_array($cst);
+    $tn = $f['TeacherName'];
+    $te = $f['TeacherEmail'];
 
     echo "<table class=\"table table-responsive table-hover table-condensed\">
-                                            <tr><td style=\"font-weight:bold\">Name</td><td><b>" . $lastname . "</b> ".$firstname."</td></tr>
+                                            <tr><td style=\"font-weight:bold\">Name</td><td>" . $studentName . "</td></tr>
                                             <tr><td style=\"font-weight:bold\">Class</td><td>" . $classID . "</td></tr>
-                                            <tr><td style=\"font-weight:bold\">Teacher</td><td>" . $TeacherN ." (<b>".$TeacherE."</b>)</td></tr>
+                                            <tr><td style=\"font-weight:bold\">Teacher</td><td>" . $tn ." (<b>".$te."</b>)</td></tr>
+                                            <tr><td style=\"font-weight:bold\">Teacher's Comment</td><td>Oluwaseun is quite hardworking. Bless him</td></tr>
                                         </table>";
 } else {
     echo "<table style=\"margin-bottom:20px\"><tr><td>You have not selected a student</td></tr></table>";

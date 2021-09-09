@@ -1,9 +1,5 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- * Payment History
- */
+
+var nuropts = "<option>1</option><option>2</option><option>3</option><option>4</option><option>X</option><option>N</option><option>S</option><option>E</option><option>I</option>";
 $(document).ready(function () {
     $('#GMmessage').summernote({height: 150});
     $('#Pmessage').summernote({height: 150});
@@ -15,7 +11,151 @@ $(document).ready(function () {
     statisticsg();
     getAssignmentsGiven();
     getFeesummary();
+
 });
+
+//\"$teacherid\",\"$session\",\"$term\",\"$stdid\",this.value
+function teacherscomment(a, f, b, c, d, e) {
+    //alert(d + " " + e);
+    var action = "teacherscomment";
+    $.post("PHP/comment.php", {action: action, teacherid: a, resulttype: f, session: b, term: c, studentid: d, comment: e}).done(function (data) {
+        console.log(data);
+    });
+}
+
+//addmedal(\"$session\",\"$term\",\"$stdid\",this.value)
+function addmedal(session, term, stdid, medal) {
+    var action = "addmedal";
+    $.post("PHP/addmedal.php", {action: action, session: session, term: term, stdid: stdid, medal: medal}).done(function (data) {
+        alert(data);
+    });
+}
+
+function addothercomment(session, term, stdid, comment) {
+    var action = "addothercomment";
+    $.post("PHP/addmedal.php", {action: action, session: session, term: term, stdid: stdid, comment: comment}).done(function (data) {
+        alert(data);
+    });
+}
+
+function addproprietresscomment(session, term, stdid, comment) {
+
+    var action = "addproprietress";
+    $.post("PHP/addmedal.php", {action: action, session: session, term: term, stdid: stdid, comment: comment}).done(function (data) {
+        alert(data);
+    });
+}
+
+function saveresult(classid, session, term, stdid, subjectid, score) {
+    var scored = document.getElementById(score).value;
+    var action = "SaveResult";
+    var result = "";
+    $.post("PHP/updateresult.php", {action: action, classid: classid, result: result, score: scored, stdid: stdid, subjectid: subjectid, term: term, session: session}).done(function (data) {
+        //alert(data);
+    });
+}
+
+function saveresultnurt(classid, session, term, stdid, subjectid, score, resulttype, maxscore) {
+    var scored = document.getElementById(score).value;
+    if (scored > maxscore) {
+        alert("Score cannot be greater than " + maxscore);
+        document.getElementById(score).value = "";
+    }
+    var action = "SaveResultnurts";
+    console.log("classid - " + classid + " session - " + session + " term - " + term + " stdid - " + stdid + " subjectid - " + subjectid + " score - " + scored + " resulttype - " + resulttype);
+    $.post("PHP/updateresult.php", {action: action, classid: classid, resulttype: resulttype, score: scored, stdid: stdid, subjectid: subjectid, term: term, session: session}).done(function (data) {
+        console.log(data);
+    });
+}
+
+function putnurez(a, b, c, d, e, f, g) {
+    var score = b;
+    var resultshow = a;
+    var stdid = c;
+    var subjectid = d;
+    var term = e;
+    var session = f;
+    var classid = g;
+    var action = "SaveResult";
+    $.post("PHP/updateresult.php", {action: action, classid: classid, score: score, result: resultshow, stdid: stdid, subjectid: subjectid, term: term, session: session}).done(function (data) {
+        alert(data);
+        if (data === "saved" || data === "updated") {
+            document.getElementById(a).innerHTML = b;
+        } else {
+            document.getElementById(a).innerHTML = "<span style='color:red'>X</span>";
+        }
+    });
+}
+
+function menuitems(wts, cfw) {
+    $("#clazz").hide();
+    $("#resultsentry").hide();
+    $("#subMenu").hide();
+    $("#home").hide();
+    $("#messages").hide();
+    $("#parents").hide();
+    $("#event").hide();
+    $("#students").hide();
+    $("#teacherss").hide();
+    $("#teachers").hide();
+    $("#newsletters").hide();
+    $("#grade").hide();
+    $("#scores").hide();
+    $("#preregs").hide();
+    $("#gradesheet").hide();
+    $("#feemngr").hide();
+    $("#register").hide();
+    $("#tsetng").hide();
+    $("#assets").hide();
+    $(wts).show();
+    $(".menustyling").removeClass("activemenu");
+    $(cfw).addClass("activemenu");
+
+    if (wts === "#scores") {
+        document.getElementById("plyresopts").innerHTML = nuropts;
+    }
+
+    if (wts === "#parents") {
+        getparents('1');
+        linkagerequest();
+    }
+    if (wts === "#students") {
+        getstudentlist();
+    }
+
+    if (wts === "#event") {
+        loadSEvent();
+    }
+
+    if (wts === "#newsletters") {
+        getnl();
+    }
+
+    if (wts === "#home") {
+        eventsDash();
+        ratifiedtimetable();
+    }
+
+    if (wts === "#messages") {
+        loadDM();
+    }
+
+    if (wts === "#teachers") {
+        $("#subMenu").hide();
+        document.getElementById("subMenu").innerHTML = "<span class='point df acSM' id='teacherhome' onclick='cSM(\"#teacherhome\",\"#tHome\")'>Staff</span> &nbsp; &nbsp;  -   &nbsp; &nbsp; <span class='point df' id='teacherassignments' onclick='cSM(\"#teacherassignments\",\"#tAssignments\")'>Assignments</span> &nbsp; &nbsp;  -   &nbsp; &nbsp; <span class='point df' id='teachersubjects' onclick=\"cSM('#teachersubjects','#tSubjects')\">Subjects</span>";
+        $("#subMenu").show(300);
+        //$("").hide();
+    }
+    if (wts === "#grade") {
+        var resultarrangee = "<span class='point df' id='jsmenu' onclick=\"rmenu('#jsmenu','#jsmenupage')\">J.S.S</span> &nbsp; &nbsp; -   &nbsp; &nbsp; <span class='point df' id='ssmenu' onclick=\"rmenu('#ssmenu','#ssmenupage')\">S.S.S</span> &nbsp; &nbsp; - &nbsp; &nbsp; <a href='legacy.php' target='_blank'>Legacy Records</a>";
+        document.getElementById("subMenu").innerHTML = resultarrangee;
+        $("#subMenu").show(300);
+    }
+}
+
+
+function fillrez(a, b, c, d, e, f) {
+}
 
 function sendDefMsge(emailq, sms) {
     var email = _("emailParent").value;
@@ -43,6 +183,34 @@ function updateS() {
     _("messageSample").innerHTML = $('#Dmessage').code();
 }
 
+function deletebillitemsel(a) {
+    alert(a);
+}
+
+function updatepaybreakdown() {
+    var b = document.getElementById("inputherespecid").innerHTML;
+    var catitems = document.getElementById("catitems").value;
+    var catamounts = document.getElementById("catamounts").value;
+    var catpaytypes = document.getElementById("catpaytypes").value
+    $.post("PHP/billprocessor.php", {action: "updatebillitems", itemid: b, catitem: catitems, amount: catamounts, paytype: catpaytypes}).done(function (data) {
+        alert(data);
+    });
+}
+
+function deletepaybreakdown() {
+    var b = document.getElementById("inputherespecid").innerHTML;
+    alert(b);
+    $.post("PHP/billprocessor.php", {action: "deletebillitems", itemid: b}).done(function (data) {
+        alert(data);
+    });
+}
+
+function ubillitem(a, b) {
+    document.getElementById("inputherethings").innerHTML = "Update " + a;
+    document.getElementById("inputherespecid").innerHTML = b;
+    document.getElementById("catitems").value = a;
+}
+
 function printDiv(divName) {
     var printContents = document.getElementById(divName).innerHTML;
     var originalContents = document.body.innerHTML;
@@ -55,14 +223,16 @@ function _(e) {
     return document.getElementById(e);
 }
 
-function searchpaye(val, wtbo) {
-//alert(val);
-    $.post("PHP/searchpaymentq.php", {val: val, wtbo: wtbo}).done(function (data) {
-        if (wtbo === "1") {
-            _("11131").innerHTML = data;
-        } else {
-            _("554765").innerHTML = data;
-        }
+function searchpayed(val) {
+    var action = "pulltbillz";
+    $.post("PHP/billprocessor.php", {val: val, action: action}).done(function (data) {
+        document.getElementById("tbillscontent").innerHTML = data;
+    });
+}
+
+function searchpaye(val, term, session) {
+    $.post("PHP/searchpaymentq.php", {val: val, term: term, session: session}).done(function (data) {
+        document.getElementById("11131").innerHTML = data;
     });
 }
 
@@ -70,10 +240,8 @@ function searchPay(columntosearch, searchval) {
     var sess = _("PRS").value;
     var term = _("PRT").value;
     var itv = _(searchval).value;
-    //alert(itv);
     _("paymentThings").innerHTML = "Search result for " + itv + " in " + columntosearch;
     $.post("PHP/searchpayment.php", {sess: sess, term: term, columntosearch: columntosearch, searchval: itv}).done(function (data) {
-//alert(data);
         _("Payday").innerHTML = data;
     });
 }
@@ -82,18 +250,14 @@ function searchTel(columntosearch, searchval) {
     var sess = _("TRS").value;
     var term = _("TRT").value;
     var itv = _(searchval).value;
-    //echo "<tr style='font-weight:bold'><td></td><td>Teller Number</td><td>Student Name</td><td>Class</td><td>Bank</td><td>Amount</td><td>Payment Date</td><td>Date Submitted</td><td>Term</td><td>Session</td><td>Receipt Issued</td></tr>";
     _("tellerDets").innerHTML = "<tr style='font-weight:bold'><td></td><td>Teller Number</td><td>Student Name</td><td>Class</td><td>Bank</td><td>Amount</td><td>Payment Date</td><td>Date Submitted</td><td>Term</td><td>Session</td><td>Receipt Issued</td></tr>";
     $.post("PHP/searchTeller.php", {sess: sess, term: term, columntosearch: columntosearch, searchval: itv}).done(function (data) {
-//alert(data);
         _("tellerDets").innerHTML += data;
     });
 }
 
 function getfeehistory(val) {
     var sd = document.getElementById(val).value;
-    //console.log(sd);
-    //$('#PHP').show(100);
     var session = _("fee_sessionmp").value;
     var term = _("fee_termmp").value;
     var stdName = _("fee_studentname").value;
@@ -117,6 +281,52 @@ function checkoverflow(sdfa) {
     }
     if (parseInt(sdfa) === parseInt(stuballa)) {
         _("amountexcess").innerHTML = "<span style='color:#2200ff; font-weight:bold'>COMPLETE</span>";
+    }
+}
+
+function appdisc(ammount, term, session, stdid) {
+    //alert(ammount + " - " + term + " - " + session + " - " + stdid);
+    var action = "applydiscount";
+    $.post("PHP/billprocessor.php", {action: action, amount: ammount, term: term, session: session, stdid: stdid}).done(function (data) {
+        alert(data);
+    });
+}
+
+function promoteme(state, classto, stdid, session) {
+    var state = document.getElementById(state).value;
+    var classto = document.getElementById(classto).value;
+    var comment = state + " " + classto;
+    alert(state + " - " + classto + " - " + stdid + " - " + session);
+    $.post("PHP/billprocessor.php", {action: "promotestat", stdid: stdid, session: session, comment: comment}).done(function (data) {
+        alert(data);
+    });
+}
+
+function calcbill(studentid, session, term, classid, billbox, itemid) {
+    var checker = document.getElementById(billbox);
+
+    if (checker.checked === true) {
+        var action = "addbillitem";
+        $.post("PHP/billprocessor.php", {action: action, studentid: studentid, session: session, term: term, classid: classid, itemid: itemid}).done(function (data) {
+            alert(data);
+        });
+    }
+    if (checker.checked === false) {
+        var action = "removebillitem";
+        $.post("PHP/billprocessor.php", {action: action, studentid: studentid, session: session, term: term, classid: classid, itemid: itemid}).done(function (data) {
+            alert(data);
+        });
+    }
+}
+//makepay($hgt, $billitem, $session, $term, $stdname)
+function makepay(payamt, billitem, session, term, stdname) {
+    var amtpayed = document.getElementById(payamt).value;
+    if (amtpayed.length < 1) {
+        //alert("Enter amount to save");
+    } else {
+        $.post("PHP/billprocessor.php", {action: "paymentlog", payment: amtpayed, item: billitem, session: session, term: term, studentid: stdname}).done(function (data) {
+            //alert(data);
+        });
     }
 }
 
@@ -173,13 +383,11 @@ function makepayment() {
                         alert("Enter valid teller number");
                     } else {
                         $.post("PHP/makepayment.php", {fee_studentname: fee_studentname, fee_datepaid: fee_datepaid, fee_bank: fee_bank, fee_teller: fee_teller, classid: classidmp, fee_receipt: fee_receipt, fee_studentnameID: fee_studentnameIDmp, fee_amount: fee_amountmp, fee_description: fee_descriptionmp, fee_term: fee_termmp, fee_session: fee_sessionmp}).done(function (data) {
-//alert(data);
                             var div = document.createElement("Div");
                             var content = data;
                             div.innerHTML = content;
                             var valu = div.getElementsByTagName("i")[0];
                             var valP = valu.innerText;
-                            //alert(valP);
                             if (valP === "1") {
                                 alert("Successfully paid in..");
                                 var feepaid = div.getElementsByTagName("fp")[0];
@@ -244,7 +452,6 @@ function sendCmsge(val, wts) {
             var yesno = confirm("2 or more text messages will be sent. are you sure?");
             if (yesno === true) {
                 $.post("PHP/sendSMS.php", {to: to, cMsge: cMsge, wtd: wts}).done(function (data) {
-                    //alert(data);
                 });
             } else {
                 alert("Message not sent");
@@ -260,7 +467,7 @@ function sendCmsge(val, wts) {
         var studentID = _("studentidM").innerHTML;
         var session = _("drSession").value;
         var term = _("drTerm").value;
-        $.post("PHP/sendmail.php", {to: to, cMsge: cMsge, session:session, term:term, studentID:studentID}).done(function (data) {
+        $.post("PHP/sendmail.php", {to: to, cMsge: cMsge, session: session, term: term, studentID: studentID}).done(function (data) {
             alert(data);
         });
     }
@@ -271,7 +478,6 @@ function fetch_studentID() {
     $.post("PHP/getStudentsfees.php", {classID: val, cv: "2"}).done(function (data) {
         document.getElementById("fee_studentnameID").innerHTML = "<option>----</option>";
         document.getElementById("fee_studentnameID").innerHTML += data;
-        //alert(data);
     });
 }
 
@@ -295,7 +501,6 @@ function fetParsPhone(stdID) {
 function fetParsEmail(stdID) {
     $.post("PHP/getPars.php", {stdID: stdID, val: "3"}).done(function (data) {
         document.getElementById("emailParent").innerHTML = data;
-        //alert(data);
     });
 }
 
@@ -357,6 +562,14 @@ function loadClassGrade(val) {
     $.post("PHP/getstudentsincat.php", {classID: val}).done(function (data) {
         document.getElementById("loadClassMembers").innerHTML = data;
     });
+    getsubjectss(val);
+}
+
+function getsubjectss(val) {
+    $.post("PHP/getSubjects.php", {searchKind: "pullsubs", classid: val}).done(function (data) {
+        document.getElementById("subjecttographbgt").innerHTML = data;
+        //alert(data);
+    });
 }
 
 function getGradelist(subjectSN) {
@@ -384,6 +597,512 @@ function getGradelist(subjectSN) {
     });
 }
 
+function respgc(a, b, c) {
+    $.post("PHP/getstudentsinclass.php", {classid: a}).done(function (data) {
+        document.getElementById(b).innerHTML = data;
+    });
+    getreporttemplate(a, c);
+}
+
+function resrecc(a, b, c) {
+    $.post("PHP/getstudentsinclass.php", {classid: a}).done(function (data) {
+        document.getElementById(b).innerHTML = data;
+    });
+    getreporttemplate(a, c);
+}
+
+function resnurc(a, b) {
+    $.post("PHP/getstudentsinclass.php", {classid: a}).done(function (data) {
+        document.getElementById(b).innerHTML = data;
+    });
+}
+
+function resgradec(a, b) {
+    $.post("PHP/getstudentsinclass.php", {classid: a}).done(function (data) {
+        document.getElementById(b).innerHTML = data;
+    });
+}
+
+function resjssc(a, b) {
+    $.post("PHP/getstudentsinclass.php", {classid: a}).done(function (data) {
+        document.getElementById(b).innerHTML = data;
+    });
+}
+
+function ressssc(a, b) {
+    $.post("PHP/getstudentsinclass.php", {classid: a}).done(function (data) {
+        document.getElementById(b).innerHTML = data;
+    });
+}
+
+function resgradc(a, b) {
+    $.post("PHP/getstudentsinclass.php", {classid: a}).done(function (data) {
+        document.getElementById(b).innerHTML = data;
+    });
+}
+
+function pullattendance() {
+    var classid = document.getElementById("pullattclass").value;
+    var session = document.getElementById("pullattsession").value;
+    $.post("PHP/getSubjects.php", {searchKind: "pullattendance", classid: classid, sessionid: session}).done(function (data) {
+        document.getElementById("attdisplay").innerHTML = data;
+    });
+}
+
+function markattendance() {
+    document.getElementById("attserver").innerHTML = "";
+    var classid = document.getElementById("attclassid").value;
+    var attname = document.getElementById("attnames").value;
+    var attsess = document.getElementById("attsess").value;
+    var attterm = document.getElementById("attterm").value;
+    var daysenrolled = document.getElementById("attdaysenrolled").value;
+    var daysabsent = document.getElementById("attdaysabsent").value;
+    var dayspresent = document.getElementById("attdayspresent").value;
+    $.post("PHP/getSubjects.php", {searchKind: "saveatt", classid: classid, stdname: attname, term: attterm, sess: attsess, enrolled: daysenrolled, absent: daysabsent, present: dayspresent}).done(function (data) {
+        document.getElementById("attserver").innerHTML = data;
+    });
+}
+
+function getobtainables(studentid, placement, term, session, resulttype) {
+    var studentid = studentid;
+    //var placeholder = placement;
+    $.post("PHP/cummscores.php", {action: 'getcumm', stdid: studentid, term: term, session: session, resulttype: resulttype}).done(function (data) {
+        document.getElementById(placement).innerHTML = data;
+        //alert(data);
+    });
+}
+
+function getattendancegrade(studentid, sess, term) {
+    var action = "reportcardattendance";
+    $.post("PHP/getreportcard.php", {action: action, stdid: studentid, sess: sess, term: term}).done(function (data) {
+        document.getElementById("attTablegrade").innerHTML = data;
+    });
+}
+
+function getattendancenur(studentid, sess, term) {
+    var action = "reportcardattendance";
+    $.post("PHP/getreportcard.php", {action: action, stdid: studentid, sess: sess, term: term}).done(function (data) {
+        document.getElementById("attTablenur").innerHTML = data;
+    });
+}
+
+function getattendanceres(stdid, sess, term) {
+    var action = "reportcardattendance";
+    $.post("PHP/getreportcard.php", {action: action, stdid: stdid, sess: sess, term: term}).done(function (data) {
+        document.getElementById("attTablerec").innerHTML = data;
+    });
+}
+
+function getrespg(sessi, termm, studentids, pgcheck) {
+    var sess = document.getElementById(sessi).value;
+    var term = document.getElementById(termm).value;
+    var studentid = document.getElementById(studentids).value;
+    if (document.getElementById(pgcheck).checked) {
+        //alert("Legacy record search");
+        var studentid = document.getElementById("pgschid").value;
+        if (studentid.length < 2) {
+            alert("Enter student's schoolID in legacy search box");
+            return;
+        }
+    }
+    var action = "playschool";
+    $.post("PHP/getreportcard.php", {action: action, session: sess, term: term, studentid: studentid}).done(function (data) {
+        document.getElementById("dashrepcards").innerHTML = data;
+    });
+    getstddemograph(studentid, sess, term, "pg");
+    getattendance(studentid, sess, term);
+    getpassportphoto(studentid, "pgphoto");
+    getsignature();
+}
+
+
+function getresrec() {
+    var sess = document.getElementById("ress").value;
+    var studentid = document.getElementById("resrecsn").value;
+    var term = document.getElementById("resrt").value;
+    var resval = document.getElementById("recschid").value;
+    if (document.getElementById("reccheck").checked) {
+        if (resval.length < 2) {
+            alert("Enter student's schoolID in legacy search box");
+            return;
+        }
+        studentid = resval;
+    }
+
+    var action = "reception";
+    $.post("PHP/getreportcard.php", {action: action, session: sess, term: term, studentid: studentid}).done(function (data) {
+        document.getElementById("dashrepreccard").innerHTML = data;
+    });
+    getstddemograph(studentid, sess, term, 'r');
+    getattendanceres(studentid, sess, term);
+    getpassportphoto(studentid, "ppr");
+}
+
+
+function getresnur() {
+    //nuroschid
+    var sess = document.getElementById("resnurs").value;
+    var term = document.getElementById("resnurt").value;
+    var studentid = document.getElementById("resnursn").value;
+    var nuroval = document.getElementById("nuroschid").value;
+    if (document.getElementById("nurocheck").checked) {
+        if (nuroval.length < 1) {
+            alert("Enter student's schoolID in legacy search box");
+            return;
+        }
+        studentid = nuroval;
+    }
+    //alert(sess + " " + studentid + " " + term);
+    var action = "nursery1";
+    $.post("PHP/getreportcard.php", {action: action, session: sess, term: term, studentid: studentid}).done(function (data) {
+        document.getElementById("dashnurocard").innerHTML = data;
+        //alert(data);
+    });
+    getstddemograph(studentid, sess, term, 'no');
+    getattendancenur(studentid, sess, term);
+    getpassportphoto(studentid, "rfno");
+}
+
+function getresnurt() {
+    var restype = document.getElementById("resnurttype").value;
+    var sess = document.getElementById("resnurts").value;
+    var term = document.getElementById("resnurtt").value;
+    var studentid = document.getElementById("resnurtsn").value;
+    var resulttype = document.getElementById("resnurttype").value;
+    var nurtval = document.getElementById("nurtschid").value;
+    //alert(nurtval);
+    if (document.getElementById("nurtcheck").checked) {
+        if (nurtval.length < 1) {
+            alert("Enter student's schoolID in legacy search box");
+            return;
+        }
+        studentid = nurtval;
+    }
+    var action = "nursery2";
+    $.post("PHP/getreportcard.php", {action: action, session: sess, term: term, restype: restype, studentid: studentid}).done(function (data) {
+        document.getElementById("dashnurtcard").innerHTML = data;
+        //Keep an old copy
+
+    });
+    getstddemograph(studentid, sess, term, 'nt');
+    getattendancenurt(studentid, sess, term);
+    getpassportphoto(studentid, "gppfnt");
+    getobtainabless(studentid, "cdcddttt", term, sess, resulttype);
+    //alert("This is getresnurt");
+}
+
+function getresjss() {
+    var sess = document.getElementById("resssss").value;
+    var classt = document.getElementById("ressssc").value;
+    var term = document.getElementById("resssst").value;
+    var studentid = document.getElementById("ressssn").value;
+    var resulttype = document.getElementById("ressssrt").value;
+    var gdval = document.getElementById("gdschid").value;
+    if (document.getElementById("gdcheck").checked) {
+        if (gdval.length < 1) {
+            alert("Enter student's schoolID in legacy search box");
+            return;
+        }
+        studentid = gdval;
+    }
+    var action = "jss";
+    $.post("PHP/getreportcard.php", {action: action, session: sess, resulttype: resulttype, term: term, studentid: studentid}).done(function (data) {
+        document.getElementById("dashjsscard").innerHTML = data;
+    });
+    getstddemographjss(studentid, sess, term, 'gd');
+    getattendancejss(studentid, sess, term);
+    getpassportphoto(studentid, "jsspphoto");
+    getobtainables(studentid, "cdcddjss", term, sess, resulttype);
+    //gppfgots
+}
+
+function getressss() {
+    var sess = document.getElementById("resjsss").value;
+    var classt = document.getElementById("resjssc").value;
+    var term = document.getElementById("resjsst").value;
+    var studentid = document.getElementById("resjsssn").value;
+    var resulttype = document.getElementById("resjssrt").value;
+    var gdval = document.getElementById("gdschid").value;
+    if (document.getElementById("gdcheck").checked) {
+        if (gdval.length < 1) {
+            alert("Enter student's schoolID in legacy search box");
+            return;
+        }
+        studentid = gdval;
+    }
+    //alert(sess + " " + studentid + " " + term + " " + resulttype + " " + classt);
+
+    var action = "sss";
+    $.post("PHP/getreportcard.php", {action: action, session: sess, resulttype: resulttype, term: term, studentid: studentid}).done(function (data) {
+        //alert(data);
+        document.getElementById("dashssscard").innerHTML = data;
+    });
+    getstddemographsss(studentid, sess, term, 'gd');
+    getattendancejss(studentid, sess, term);
+    getpassportphoto(studentid, "ssspphoto");
+
+    getobtainables(studentid, "cdcddjs", term, sess, resulttype);
+    //gppfgots
+}
+
+/*
+ function getobtainablessjs(studentid, placement, term, session, resulttype) {
+ var studentid = studentid;
+ //alert(session + " " + term + " " + resulttype);
+ //var placeholder = placement;
+ $.post("PHP/cummscores.php", {action: 'getcumms', stdid: studentid, term: term, session: session, resulttype:resulttype}).done(function (data) {
+ document.getElementById(placement).innerHTML = data;
+ //alert(data);
+ });
+ }*/
+
+function getattendancejss(studentid, sess, term) {
+    var action = "reportcardattendance";
+    $.post("PHP/getreportcard.php", {action: action, stdid: studentid, sess: sess, term: term}).done(function (data) {
+        document.getElementById("attTablejss").innerHTML = data;
+    });
+}
+
+function getattendancesss(studentid, sess, term) {
+    var action = "reportcardattendance";
+    $.post("PHP/getreportcard.php", {action: action, stdid: studentid, sess: sess, term: term}).done(function (data) {
+        document.getElementById("attTablesss").innerHTML = data;
+    });
+}
+
+function getstddemographsss(stdid, sess, term, pp) {
+    $.post("PHP/getreportcard.php", {action: "getdemograph", studentid: stdid, session: sess, term: term}).done(function (data) {
+
+        var content = data;
+        {
+            var parser = document.createElement("div");
+            parser.innerHTML = content;
+            var studentid = parser.getElementsByTagName('a')[0];
+            var stdname = parser.getElementsByTagName('b')[0];
+            var term = parser.getElementsByTagName('c')[0];
+            var classcount = parser.getElementsByTagName('d')[0];
+            var classname = parser.getElementsByTagName('e')[0];
+            var session = parser.getElementsByTagName('f')[0];
+            var teacher = parser.getElementsByTagName('g')[0];
+            var proprietress = parser.getElementsByTagName('h')[0];
+
+            document.getElementById("stdnamentss").innerHTML = stdname.innerText;
+            document.getElementById("idnumberntss").innerHTML = studentid.innerText;
+            document.getElementById("teachnamentss").innerHTML = teacher.innerText;
+            document.getElementById("propnamentss").innerHTML = proprietress.innerText;
+            document.getElementById("termntss").innerHTML = term.innerText;
+            document.getElementById("classnumntss").innerHTML = classcount.innerText;
+            document.getElementById("classnamentss").innerHTML = classname.innerText;
+            document.getElementById("acayearntss").innerHTML = session.innerText;
+        }
+    });
+}
+
+function getstddemographjss(stdid, sess, term, pp) {
+    $.post("PHP/getreportcard.php", {action: "getdemograph", studentid: stdid, session: sess, term: term}).done(function (data) {
+        //alert(data);
+        var content = data;
+        {
+            var parser = document.createElement("div");
+            parser.innerHTML = content;
+            var studentid = parser.getElementsByTagName('a')[0];
+            var stdname = parser.getElementsByTagName('b')[0];
+            var term = parser.getElementsByTagName('c')[0];
+            var classcount = parser.getElementsByTagName('d')[0];
+            var classname = parser.getElementsByTagName('e')[0];
+            var session = parser.getElementsByTagName('f')[0];
+            var teacher = parser.getElementsByTagName('g')[0];
+            var proprietress = parser.getElementsByTagName('h')[0];
+
+            document.getElementById("stdnamentjs").innerHTML = stdname.innerText;
+            document.getElementById("idnumberntjs").innerHTML = studentid.innerText;
+            document.getElementById("teachnamentjs").innerHTML = teacher.innerText;
+            document.getElementById("propnamentjs").innerHTML = proprietress.innerText;
+            document.getElementById("termntjs").innerHTML = term.innerText;
+            document.getElementById("classnumntjs").innerHTML = classcount.innerText;
+            document.getElementById("classnamentjs").innerHTML = classname.innerText;
+            document.getElementById("acayearntjs").innerHTML = session.innerText;
+        }
+    });
+}
+
+function checkresgradert(a) {
+    if (a === "midterm") {
+        $("#gdlevelattendance").hide();
+        document.getElementById("gdleveltype").innerHTML = "MIDTERM REPORT";
+    } else {
+        $("#gdlevelattendance").show();
+        document.getElementById("gdleveltype").innerHTML = "TERMINAL/YEARLY REPORT";
+    }
+}
+function checkresjssrt(a) {
+    if (a === "midterm") {
+        $("#gdlevelattendancesss").hide();
+        //document.getElementById("jsleveltype").innerHTML = "MIDTERM REPORT";
+        document.getElementById("gdleveltypesss").innerHTML = "MIDTERM REPORT";
+    } else {
+        $("#gdlevelattendancesss").show();
+        //document.getElementById("jsleveltype").innerHTML = "TERMINAL/YEARLY REPORT";
+        document.getElementById("gdleveltypesss").innerHTML = "TERMINAL/YEARLY REPORT";
+    }
+}
+
+function getresgradeord() {
+    var sess = document.getElementById("resgradesor").value;
+    var classt = document.getElementById("resgradecor").value;
+    var term = document.getElementById("resgadetor").value;
+    var studentid = document.getElementById("gdschidor").value;
+    var resulttype = document.getElementById("resgradertor").value;
+    var gdval = document.getElementById("gdschidor").value;
+    //alert(sess + " " + studentid + " " + term + " " + resulttype + " " + classt);
+    var action = "getoldreport";
+    $.post("PHP/getreportcard.php", {action: action, session: sess, resulttype: resulttype, term: term, studentid: studentid}).done(function (data) {
+        //document.getElementById("dashgradecardor").innerHTML = data;
+        document.getElementById("gradResltold").innerHTML = data;
+    });
+    getstddemographgrade(studentid, sess, term, 'gd');
+    getattendancegrade(studentid, sess, term);
+    getpassportphoto(studentid, "gppfgots");
+
+    getobtainables(studentid, "cdcdd", term, sess, resulttype);
+    //gppfgots
+}
+//rfno
+
+function getpassportphoto(stdid, destination) {
+    //alert(stdid + " - " + destination);
+    $.post("PHP/getpassportphoto.php", {stdid: stdid}).done(function (data) {
+        document.getElementById(destination).innerHTML = "<img src='" + data + "' width='100%' height='100%'>";
+    });
+}
+
+function getobtainabless(studentid, placement, term, session, resulttype) {
+    var studentid = studentid;
+    //alert(session + " " + term + " " + resulttype);
+    //var placeholder = placement;
+    $.post("PHP/cummscores.php", {action: 'getcumms', stdid: studentid, term: term, session: session, resulttype: resulttype}).done(function (data) {
+        document.getElementById(placement).innerHTML = data;
+        //alert(data);
+    });
+}
+
+function getstddemograph(stdid, sess, term, pp) {
+    $.post("PHP/getreportcard.php", {action: "getdemograph", studentid: stdid, session: sess, term: term}).done(function (data) {
+        var content = data;
+        {
+            var parser = document.createElement("div");
+            parser.innerHTML = content;
+            var studentid = parser.getElementsByTagName('a')[0];
+            var stdname = parser.getElementsByTagName('b')[0];
+            var term = parser.getElementsByTagName('c')[0];
+            var classcount = parser.getElementsByTagName('d')[0];
+            var classname = parser.getElementsByTagName('e')[0];
+            var session = parser.getElementsByTagName('f')[0];
+            var teacher = parser.getElementsByTagName('g')[0];
+            var proprietress = parser.getElementsByTagName('h')[0];
+            /*
+             var studentname = "stdname"+pp;
+             var studentterm = "term"+pp;
+             var studentclass = "classnum"+pp;
+             var studentclassname = "classname"+pp;
+             var session = "acayear"+pp;
+             var teachername = "teachname"+pp;
+             var proprietress = "propname"+pp;
+             var idnumber = "idnumber"+pp;
+             alert (studentname + " " + studentterm + " " + studentclass + " " + studentclassname + " " + session);
+             */
+            document.getElementById("stdname" + pp).innerHTML = stdname.innerText;
+            document.getElementById("term" + pp).innerHTML = term.innerText;
+            document.getElementById("classnum" + pp).innerHTML = classcount.innerText;
+            document.getElementById("classname" + pp).innerHTML = classname.innerText;
+            document.getElementById("acayear" + pp).innerHTML = session.innerText;
+            document.getElementById("teachname" + pp).innerHTML = teacher.innerText;
+            document.getElementById("propname" + pp).innerHTML = proprietress.innerText;
+            document.getElementById("idnumber" + pp).innerHTML = studentid.innerText;
+
+        }
+    });
+}
+
+function getstddemographgrade(stdid, sess, term, pp) {
+    $.post("PHP/getreportcard.php", {action: "getdemograph", studentid: stdid, session: sess, term: term}).done(function (data) {
+        var content = data;
+        {
+            var parser = document.createElement("div");
+            parser.innerHTML = content;
+            var studentid = parser.getElementsByTagName('a')[0];
+            var stdname = parser.getElementsByTagName('b')[0];
+            var term = parser.getElementsByTagName('c')[0];
+            var classcount = parser.getElementsByTagName('d')[0];
+            var classname = parser.getElementsByTagName('e')[0];
+            var session = parser.getElementsByTagName('f')[0];
+            var teacher = parser.getElementsByTagName('g')[0];
+            var proprietress = parser.getElementsByTagName('h')[0];
+
+            document.getElementById("stdnamentgd").innerHTML = stdname.innerText;
+            document.getElementById("idnumberntpg").innerHTML = studentid.innerText;
+            document.getElementById("teachnamentgd").innerHTML = teacher.innerText;
+            document.getElementById("propnamentgd").innerHTML = proprietress.innerText;
+            document.getElementById("termntgd").innerHTML = term.innerText;
+            document.getElementById("classnumntgd").innerHTML = classcount.innerText;
+            document.getElementById("classnamentgd").innerHTML = classname.innerText;
+            document.getElementById("acayearntpg").innerHTML = session.innerText;
+        }
+    });
+}
+
+/*
+ function getstddemographjss(stdid, sess, term, pp) {
+ $.post("PHP/getreportcard.php", {action: "getdemograph", studentid: stdid, session: sess, term: term}).done(function (data) {
+ var content = data;
+ {
+ var parser = document.createElement("div");
+ parser.innerHTML = content;
+ var studentid = parser.getElementsByTagName('a')[0];
+ var stdname = parser.getElementsByTagName('b')[0];
+ var term = parser.getElementsByTagName('c')[0];
+ var classcount = parser.getElementsByTagName('d')[0];
+ var classname = parser.getElementsByTagName('e')[0];
+ var session = parser.getElementsByTagName('f')[0];
+ var teacher = parser.getElementsByTagName('g')[0];
+ var proprietress = parser.getElementsByTagName('h')[0];
+ 
+ document.getElementById("stdnamentjs").innerHTML = stdname.innerText;
+ document.getElementById("idnumberntjs").innerHTML = studentid.innerText;
+ document.getElementById("teachnamentjs").innerHTML = teacher.innerText;
+ document.getElementById("propnamentjs").innerHTML = proprietress.innerText;
+ document.getElementById("termntjs").innerHTML = term.innerText;
+ document.getElementById("classnumntjs").innerHTML = classcount.innerText;
+ document.getElementById("classnamentjs").innerHTML = classname.innerText;
+ document.getElementById("acayearntjs").innerHTML = session.innerText;
+ }
+ });
+ }*/
+
+function getreporttemplate(a, b) {
+    var classid = a;
+    var placeholder = b;
+    //alert(a + " - " + b);
+    $.post("PHP/reporttemplates.php", {classid: classid}).done(function (data) {
+        //alert(data);
+        document.getElementById(placeholder).innerHTML = data;
+    });
+}
+
+function getattendance(stdid, sess, term) {
+    var action = "reportcardattendance";
+    $.post("PHP/getreportcard.php", {action: action, stdid: stdid, sess: sess, term: term}).done(function (data) {
+        document.getElementById("attTable").innerHTML = data;
+    });
+}
+
+function getattendancenurt(stdid, sess, term) {
+    var action = "reportcardattendance";
+    $.post("PHP/getreportcard.php", {action: action, stdid: stdid, sess: sess, term: term}).done(function (data) {
+        //alert(data)
+        document.getElementById("attTablenurt").innerHTML = data;
+    });
+}
 function getResults() {
     var searchcrit = document.getElementById("searchCrit").value;
     var searchTerm = document.getElementById("searchTerm").value;
@@ -442,10 +1161,25 @@ function crit(wtl) {
 function addSubject() {
     document.getElementById("ServerResponse").innerHTML = "Please wait..";
     var subject = document.getElementById("subName").value;
+    var subjectcat = document.getElementById("subCategorys").value;
     var subclass = document.getElementById("subCategory").value;
+    var subcode = document.getElementById("subcode").value;
     var status = document.getElementById("subStatus").value;
     var classSubstring = subclass.substring(0, 4) + subject.substring(0, 4);
-    $.post("PHP/addsubject.php", {subject: subject, subclass: subclass, status: status, subjectID: classSubstring}).done(function (data) {
+    $.post("PHP/addsubject.php", {subject: subject, subcode: subcode, subjectcat: subjectcat, subclass: subclass, status: status, subjectID: classSubstring}).done(function (data) {
+        document.getElementById("ServerResponse").innerHTML = data;
+    });
+}
+
+function addSubjectcollege() {
+    document.getElementById("ServerResponse").innerHTML = "Please wait..";
+    var subject = document.getElementById("subName").value;
+    var subjectcat = document.getElementById("subCategorys").value;
+    var subclass = document.getElementById("subCategory").value;
+    var subcode = document.getElementById("subcode").value;
+    var status = document.getElementById("subStatus").value;
+    var classSubstring = subclass.substring(0, 4) + subject.substring(0, 4);
+    $.post("PHP/addSubjectcollege.php", {subject: subject, subcode: subcode, subjectcat: subjectcat, subclass: subclass, status: status, subjectID: classSubstring}).done(function (data) {
         document.getElementById("ServerResponse").innerHTML = data;
     });
 }
@@ -469,6 +1203,11 @@ function loginBackend() {
     var password = document.getElementById("BEpassword").value;
     $.post("PHP/loginAdmin.php", {user: user, password: password}).done(function (data) {
         document.getElementById("logininfo").innerHTML = data;
+        if (data === "3") {
+            document.getElementById("logininfo").innerHTML = "<span style='color:#ff0000'>Welcome College Teacher</span>";
+            //alert("Teacher");
+            window.location = "CollegePortalTeachers.php";
+        }
         if (data === "2") {
             document.getElementById("logininfo").innerHTML = "<span style='color:#ff0000'>Welcome Teacher</span>";
             //alert("Teacher");
@@ -610,15 +1349,69 @@ function stdSendMail(sender) {
     }
 }
 
+function getstdsres() {
+    var stdclass = document.getElementById("subjectTaughtwClassSN").value;
+    var stdterm = document.getElementById("scTerm").value;
+    var stdsession = document.getElementById("scSess").value;
+    $.post("PHP/getstdres.php", {stdclass: stdclass, stdterm: stdterm, stdsession: stdsession}).done(function (data) {
+        alert(data);
+    });
+}
+
+function savescore() {
+    var classid = document.getElementById("subjectTaughtwClassSN").value;
+    var subjectid = document.getElementById("subjectTaughtwClass").value;
+    var term = document.getElementById("scTerm").value;
+    var session = document.getElementById("scSess").value;
+    var resStdname = document.getElementById("resStdname").value;
+    var playgres = document.getElementById("plyresopts").value;
+    var graderes = document.getElementById("grdresopts").value;
+    var rescat = document.getElementById("cat5").value;
+
+    console.log(classid + " <-classid " + subjectid + " <-subjectid " + term + " <-Term " + session + " <-Session " + resStdname + " <-Studentname " + playgres + " <-Playgrade " + graderes);
+    if (classid === "3") {
+        //studentid, term, session, classid, subjectid, result, teacherid
+        //This assumes playgroup result
+        var action = "playgroup";
+        $.post("PHP/savenur.php", {action: action, stdid: resStdname, term: term, session: session, classid: classid, subjectid: subjectid, result: playgres}).done(function (data) {
+            alert(data);
+        });
+    }
+    if (classid === "11") {
+        //studentid, term, session, classid, subjectid, result, teacherid
+        //This assumes Nursery 2 result
+        //var 
+        var action = "Nursery2";
+        $.post("PHP/savenur.php", {action: action, rescat: rescat, stdid: resStdname, term: term, session: session, classid: classid, subjectid: subjectid, result: graderes}).done(function (data) {
+            alert(data);
+        });
+    }
+    //getstdsres();
+}
+
 function ASsave() {
     var studentID = document.getElementById("ASstudentid").value;
     var surname = document.getElementById("ASsurname").value;
     var firstname = document.getElementById("ASfirstname").value;
     var ASclass = document.getElementById("ASclass").value;
-    var email = document.getElementById("ASemail").value;
+    var middlename = document.getElementById("ASmiddlename").value;
+    var gender = document.getElementById("ASsex").value;
+    var dob = document.getElementById("ASDOB").value;
+    var pob = document.getElementById("ASPOB").value;
+    var soo = document.getElementById("ASSOO").value;
+    var lga = document.getElementById("ASLGA").value;
+    var nationality = document.getElementById("ASNationality").value;
+    var religion = document.getElementById("ASReligion").value;
+    var healthstatus = document.getElementById("ASHealthstatus").value;
+    var bloodgrp = document.getElementById("ASBloodgroup").value;
+    var genotype = document.getElementById("ASGenotype").value;
+    var AShomeaddress = document.getElementById("AShomeaddress").value;
+    var ASPreviousschools = document.getElementById("ASPreviousschools").value;
+    var session = document.getElementById("ASSsession").value;
+
     var homeaddress = document.getElementById("AShomeaddress").value;
-    $.post("PHP/savenewstudent.php", {studentID: studentID, surname: surname, firstname: firstname, ASclass: ASclass, email: email, homeaddy: homeaddress}).done(function (data) {
-        console.log(data);
+    $.post("PHP/savenewstudent.php", {studentID: studentID, session: session, surname: surname, middlename: middlename, prevschools: ASPreviousschools, bloodgrp: bloodgrp, genotype: genotype, homeadd: AShomeaddress, lga: lga, nationality: nationality, religion: religion, healths: healthstatus, gender: gender, dob: dob, pob: pob, soo: soo, firstname: firstname, ASclass: ASclass, homeaddy: AShomeaddress}).done(function (data) {
+        // alert(data);
         switch (data) {
             case "0":
                 document.getElementById("returnedRez").innerHTML = "<font style='color:#ff0000; font-size:12px'>Not saved</font>";
@@ -651,6 +1444,7 @@ function statisticsg() {
         // document.getElementById("teachercount").innerHTML = teachercount.innerText;
         //document.getElementById("parentCount").innerHTML = parentcount.innerText;
         document.getElementById("stdcount").innerHTML = studentcount.innerText;
+        document.getElementById("sc").innerHTML = studentcount.innerText;
         document.getElementById("dmCount").innerHTML = msgcount.innerText;
         console.log(msgcount.innerText);
         //document.getElementById("statistics").innerHTML = requests.innerText + " requests, " + approved.innerText + " approved";
@@ -686,7 +1480,7 @@ function updateparentprofile() {
 }
 
 function loadattachedstudents() {
-    $.post("PHP/loadattachedstudents.php").done(function (data) {
+    $.post("PHP/loadattachedstudents.php", {ParentName: "ParentName"}).done(function (data) {
         document.getElementById("loadattachedstudents").innerHTML = data;
     });
 }
@@ -789,6 +1583,7 @@ function registerParent() {
 function loadDM() {
     document.getElementById("mailcontent").innerHTML = "";
     document.getElementById("msgprecursor").innerHTML = "Please wait";
+
     $.post("PHP/loadmessages.php").done(function (data) {
 //        console.log(data);
         document.getElementById("msgprecursor").innerHTML = data;
@@ -810,7 +1605,7 @@ function getstat() {
         var teachercount = div.getElementsByTagName('d')[0];
         var assignments = div.getElementsByTagName('e')[0];
         document.getElementById("pc").innerHTML = parentcount.innerText;
-        document.getElementById("sc").innerHTML = studentcount.innerText;
+        //document.getElementById("sc").innerHTML = studentcount.innerText;
         document.getElementById("tc").innerHTML = teachercount.innerText;
         document.getElementById("prs").innerHTML = preregisteredcount.innerText;
         document.getElementById("ass").innerHTML = assignments.innerText;
@@ -897,6 +1692,53 @@ function getassignment(studentid) {
     });
 }
 
+function updatepars(val) {
+    var searchVal = "updatepar";
+    $.post("PHP/getparents.php", {searchCriteria: searchVal, parid: val}).done(function (data) {
+        //<a>$fn</a><b>$ln</b><c>$rel</c><d>$occu</d><e>$office</e><f>$phon</f><g>$email</g>"
+        var content = data;
+        var divg = document.createElement("div");
+        divg.innerHTML = content;
+        var firstname = divg.getElementsByTagName('a')[0];
+        var lastname = divg.getElementsByTagName('b')[0];
+        var religion = divg.getElementsByTagName('c')[0];
+        var occupation = divg.getElementsByTagName('d')[0];
+        var office = divg.getElementsByTagName('e')[0];
+        var phone = divg.getElementsByTagName('f')[0];
+        var email = divg.getElementsByTagName('g')[0];
+        var password = divg.getElementsByTagName('h')[0];
+
+        document.getElementById("updateparid").innerHTML = val;
+        document.getElementById("parNameu").value = firstname.innerText;
+        document.getElementById("parLNameu").value = lastname.innerText;
+        document.getElementById("parReligionu").value = religion.innerText;
+        document.getElementById("parOccupationu").value = occupation.innerText;
+        document.getElementById("parOfficeaddressu").value = office.innerText;
+        document.getElementById("parPhonenumberu").value = phone.innerText;
+        document.getElementById("parEmailu").value = email.innerText;
+        document.getElementById("parPassu").value = password.innerText;
+        //document.getElementById("parentstable").innerHTML += data;
+    });
+}
+
+function getparentsforud(val) {
+    if (val === "search") {
+        var searchVal = document.getElementById("parentsSearch").value;
+        document.getElementById("parentstable").innerHTML = "<tr style=\"font-weight:bold; background-color:#DAE6ED\"><td>Parent Name</td><td>eNotify</td><td>Phone</td><td>Email Address</td><td>Status</td><td>Student(s)</td></tr>";
+        $.post("PHP/getparents.php", {searchCriteria: searchVal}).done(function (data) {
+            document.getElementById("parentstable").innerHTML += data;
+        });
+    } else {
+        paginategetparents();
+        var searchVal = "All";
+        document.getElementById("parentstable").innerHTML = "<tr style=\"font-weight:bold; background-color:#DAE6ED\"><td>Parent Name</td><td>eNotify</td><td>Phone</td><td>Email Address</td><td>Status</td><td>Student(s)</td></tr>";
+        $.post("PHP/getparents.php", {searchCriteria: searchVal}).done(function (data) {
+            document.getElementById("parentstable").innerHTML += data;
+        });
+    }
+}
+
+
 function getparents(val) {
     if (val === "search") {
         var searchVal = document.getElementById("parentsSearch").value;
@@ -918,17 +1760,17 @@ function getstudents(val) {
     if (val === "search") {
         var searchVal = document.getElementById("studentsSearch").value;
         var param = "search";
-        document.getElementById("allstudentsinfo").innerHTML = "<tr style=\"font-weight:bold; background-color:#DAE6ED\"><td>Student ID</td><td>Student Name</td><td>Class</td><td>Email Address</td><td>Links</td><td>Edit</td></tr>";
+        //document.getElementById("allstudentsinfo").innerHTML = "<tr style=\"font-weight:bold; background-color:#DAE6ED\"><td>Student ID</td><td>Student Name</td><td>Class</td><td>Email Address</td><td>Links</td><td>Edit</td></tr>";
         $.post("PHP/getstudentslist.php", {searchCriteria: searchVal, searchParameter: param}).done(function (data) {
-            document.getElementById("allstudentsinfo").innerHTML += data;
+            document.getElementById("allstudentsinfo").innerHTML = data;
             console.log(data);
         });
     } else if (val === "filter") {
         var searchVal = document.getElementById("filterstdclass").value;
         var param = "filter";
-        document.getElementById("allstudentsinfo").innerHTML = "<tr style=\"font-weight:bold; background-color:#DAE6ED\"><td>Student ID</td><td>Student Name</td><td>Class</td><td>Email Address</td><td>Links</td><td>Edit</td></tr>";
+        //document.getElementById("allstudentsinfo").innerHTML = "<tr style=\"font-weight:bold; background-color:#DAE6ED\"><td>Student ID</td><td>Student Name</td><td>Class</td><td>Email Address</td><td>Links</td><td>Edit</td></tr>";
         $.post("PHP/getstudentslist.php", {searchCriteria: searchVal, searchParameter: param}).done(function (data) {
-            document.getElementById("allstudentsinfo").innerHTML += data;
+            document.getElementById("allstudentsinfo").innerHTML = data;
         });
     } else {
 //paginategetparents();
@@ -946,7 +1788,6 @@ function paginategetparents() {
     });
 }
 
-
 function paginate(limit, offset, wo) {
     $(".pl").removeClass("pls");
     $(wo).addClass("pls");
@@ -961,7 +1802,7 @@ function getstuID(stuName) {
     document.getElementById("studentgradID").selectedIndex = stuName;
 }
 
-function chch(){
+function chch() {
     alert("Hi");
 }
 
@@ -970,7 +1811,7 @@ function getstudentsOffering(subjectSN, subjectComponent) {
     var term = document.getElementById("scTerm").value;
     document.getElementById("stuP").innerHTML = "<tr style='font-weight:bold'><td></td><td>Name</td><td>C.E</td><td>Asgnmt</td><td>Quiz</td><td>1st</td><td>2nd</td><td>Projct</td><td>Exam</td></tr>";
     var rt = document.getElementById("subjectTaughtwClass").value;
-    $.post("PHP/getcourseStudents.php", {subjectComponent:subjectComponent, subjectsn: subjectSN, classSubject: rt, whicGV: "1", sess: sess, term: term}).done(function (data) {
+    $.post("PHP/getcourseStudents.php", {subjectComponent: subjectComponent, subjectsn: subjectSN, classSubject: rt, whicGV: "1", sess: sess, term: term}).done(function (data) {
         document.getElementById("stuP").innerHTML += data;
         studentsOfferingID();
         studentsOfferingName();
@@ -1044,7 +1885,8 @@ function studentsOfferingID() {
 
 function createClass() {
     var classname = document.getElementById("ClassNames").value;
-    $.post("PHP/createClass.php", {classname: classname}).done(function (data) {
+    var classtype = document.getElementById("classtype").value;
+    $.post("PHP/createClass.php", {classname: classname, classtype: classtype}).done(function (data) {
         alert(data);
     });
 }
@@ -1063,8 +1905,8 @@ function studentsOfferingName() {
     });
 }
 
-function showdebtors(val) {
-    $.post("PHP/generatedebtlist.php", {wtd: val}).done(function (data) {
+function showdebtors(term, session, val) {
+    $.post("PHP/generatedebtlist.php", {wtd: val, term: term, session: session}).done(function (data) {
         _("mradtable").innerHTML = data;
         //console.log(data);
     });
@@ -1094,57 +1936,24 @@ function masterRegister(val, ew) {
 
 }
 
-function menuitems(wts, cfw) {
-    $("#clazz").hide();
-    $("#subMenu").hide();
-    $("#home").hide();
-    $("#messages").hide();
-    $("#parents").hide();
-    $("#event").hide();
-    $("#students").hide();
-    $("#teachers").hide();
-    $("#newsletters").hide();
-    $("#grade").hide();
-    $("#scores").hide();
-    $("#preregs").hide();
-    $("#gradesheet").hide();
-    $("#feemngr").hide();
-    $("#register").hide();
-    $("#tsetng").hide();
-    $(wts).show();
-    $(".menustyling").removeClass("activemenu");
-    $(cfw).addClass("activemenu");
-    if (wts === "#parents") {
-        getparents('1');
-        linkagerequest();
-    }
-    if (wts === "#students") {
-        getstudentlist();
-    }
+function rmenu(a, b) {
+    hidermenus();
+    $(".df").removeClass("acSM");
+    $(a).addClass("acSM");
+    $(b).show();
+    //$("#gmenupageold").hide();
+}
 
-    if (wts === "#event") {
-        loadSEvent();
-    }
-
-    if (wts === "#newsletters") {
-        getnl();
-    }
-
-    if (wts === "#home") {
-        eventsDash();
-        ratifiedtimetable();
-    }
-
-    if (wts === "#messages") {
-        loadDM();
-    }
-
-    if (wts === "#teachers") {
-        $("#subMenu").hide();
-        document.getElementById("subMenu").innerHTML = "<span class='point df acSM' id='teacherhome' onclick='cSM(\"#teacherhome\",\"#tHome\")'>Staff</span> &nbsp; &nbsp;  -   &nbsp; &nbsp; <span class='point df' id='teacherassignments' onclick='cSM(\"#teacherassignments\",\"#tAssignments\")'>Assignments</span> &nbsp; &nbsp;  -   &nbsp; &nbsp; <span class='point df' id='teachersubjects' onclick=\"cSM('#teachersubjects','#tSubjects')\">Subjects</span>";
-        $("#subMenu").show(300);
-        //$("").hide();
-    }
+function hidermenus() {
+    $("#pgmenupage").hide();
+    $("#gmenupageold").hide();
+    $("#rmenupage").hide();
+    $("#nmenupage").hide();
+    $("#jsmenupage").hide();
+    $("#ssmenupage").hide();
+    //n2menupage
+    $("#n2menupage").hide();
+    $("#gmenupage").hide();
 }
 
 function hidesubmenus() {
@@ -1212,10 +2021,17 @@ function loadAsses(fa, wta) {
 
 function viewAttaches(pID) {
     document.getElementById("thelists").innerHTML = "Please wait..";
-    //console.log(pID);
     $.post("PHP/getstudents.php", {pID: pID}).done(function (data) {
 //console.log(data);
         document.getElementById("thelists").innerHTML = data;
+    });
+}
+
+function removelink(parid, stdid) {
+    var action = "delinkstd";
+    //alert(action);
+    $.post("PHP/getstudents.php", {action: action, parid: parid, stdid: stdid}).done(function (data) {
+        alert(data);
     });
 }
 
@@ -1238,17 +2054,26 @@ function viewSAttaches(sID) {
 function updateStudent() {
     document.getElementById("stdsurname").value;
     var sname = document.getElementById("stdsurname").value;
+    var mname = document.getElementById("stdmiddlename").value;
     var fname = document.getElementById("stdfirstname").value;
     var classID = document.getElementById("stdclassid").value;
     var address = document.getElementById("stdaddress").value;
     var stdemail = document.getElementById("stdemailaddress").value;
     var id = document.getElementById("studentid").innerHTML;
-    $.post("PHP/updateStudentdata.php", {sname: sname, fname: fname, classID: classID, address: address, stdemail: stdemail, id: id}).done(function (data) {
+    $.post("PHP/updateStudentdata.php", {action: "updatestd", sname: sname, mname: mname, fname: fname, classID: classID, address: address, stdemail: stdemail, id: id}).done(function (data) {
+        document.getElementById("Updateresponse").innerHTML = data;
+    });
+}
+
+function removeStudent() {
+    var id = document.getElementById("studentid").innerHTML;
+    $.post("PHP/updateStudentdata.php", {action: "removestd", id: id}).done(function (data) {
         document.getElementById("Updateresponse").innerHTML = data;
     });
 }
 
 function getstdInfo(stdID) {
+    //alert(stdID);
 //document.getElementById("updateInfo").innerHTML = "Please wait..";
     $.post("PHP/getstdInfoforupdate.php", {sID: stdID}).done(function (data) {
 //document.getElementById("thelistsP").innerHTML = data;
@@ -1256,18 +2081,39 @@ function getstdInfo(stdID) {
         var content = data;
         var div = document.createElement("div");
         div.innerHTML = content;
+        var stdimage = div.getElementsByTagName('g')[0];
         var fname = div.getElementsByTagName('b')[0];
         var sname = div.getElementsByTagName('a')[0];
         var sclass = div.getElementsByTagName('e')[0];
         var address = div.getElementsByTagName('c')[0];
         var email = div.getElementsByTagName('d')[0];
         var studentid = div.getElementsByTagName('f')[0];
-        document.getElementById("stdsurname").value = fname.innerText;
-        document.getElementById("stdfirstname").value = sname.innerText;
+
+        var stdgender = div.getElementsByTagName('h')[0];
+        var stdsoo = div.getElementsByTagName('i')[0];
+        var stdnationality = div.getElementsByTagName('j')[0];
+        var stdbloodgroup = div.getElementsByTagName('k')[0];
+        var stdgenotype = div.getElementsByTagName('l')[0];
+        var stdhealthstatus = div.getElementsByTagName('m')[0];
+        var middlename = div.getElementsByTagName('n')[0];
+
+        var imgtouse = "PHP/" + stdimage.innerText;
+        //alert(imgtouse);
+        document.getElementById("passprthere").innerHTML = "<img src='" + imgtouse + "' width='200px' height='200px'>";
+        document.getElementById("stdmiddlename").value = middlename.innerText;
+        document.getElementById("stdsurname").value = sname.innerText;
+        document.getElementById("stdfirstname").value = fname.innerText;
         document.getElementById("stdclassid").value = sclass.innerText;
         document.getElementById("stdaddress").value = address.innerText;
         document.getElementById("stdemailaddress").value = email.innerText;
         document.getElementById("studentid").innerHTML = studentid.innerText;
+
+        document.getElementById("stdgender").innerHTML = stdgender.innerText;
+        document.getElementById("stdsoo").innerHTML = stdsoo.innerText;
+        document.getElementById("stdnationality").innerHTML = stdnationality.innerText;
+        document.getElementById("stdbloodgroup").innerHTML = stdbloodgroup.innerText;
+        document.getElementById("stdgenotype").innerHTML = stdgenotype.innerText;
+        document.getElementById("stdhealthstatus").innerHTML = stdhealthstatus.innerText;
     });
 }
 
@@ -1289,10 +2135,9 @@ function allowlink(parentID, studentID) {
 
 function getstudentlist() {
     var val = "getlist";
-    document.getElementById("allstudentsinfo").innerHTML = "<tr style=\"font-weight:bold; background-color:#C9DAE4\"><td>Student ID</td><td>Student Name</td><td>Class</td><td>Email Address</td><td>Links</td><td>Edit</td></tr>";
     $.post("PHP/getstudentslist.php", {searchParameter: val}).done(function (data) {
 //console.log(data);
-        document.getElementById("allstudentsinfo").innerHTML += data;
+        document.getElementById("allstudentsinfo").innerHTML = data;
     });
 }
 
@@ -1322,8 +2167,10 @@ function deleteClass(tID) {
 
 //<table class='table table-striped table-condensed' style='font-size:12px; margin-bottom:10px' id='teacherslist'><tr><td colspan='3' style='text-align: center; padding:20px'>Click refresh to display list</td></tr></table>
 function deleteClassT(tID) {
+    //alert(tID);
     var asdaf = confirm("Are you sure you want to remove this record?");
     if (asdaf === true) {
+        //alert(tID);
         $.post("PHP/removeTeacher.php", {tID: tID}).done(function (data) {
             alert(data);
             teacherlist()
@@ -1344,32 +2191,65 @@ function teacherlist() {
     });
 }
 
-function updatesubjectTeachers() {
+function updatesubjectTeachers() {//updatesubjectcode
+    var subjectcode = document.getElementById("updatesubjectcode").value;
+    var subjectname = document.getElementById("updatesubjectname").value;
     var SN = document.getElementById("subjectSNDetail").innerHTML;
     var teacherID = document.getElementById("assignSubjectTeacherID").value;
-    alert(SN + " - " + teacherID);
-    $.post("PHP/updatesubjectTeacher.php", {SN: SN, teacherID: teacherID}).done(function (data) {
+//alert(subjectcode + " - " + subjectname);
+//return;
+    $.post("PHP/updatesubjectTeacher.php", {SN: SN, subjectcode: subjectcode, subjectname: subjectname, teacherID: teacherID}).done(function (data) {
         alert(data);
     });
 }
 
 function updateSubject(val) {
+    alert(val);
     $("#updatesubject").show(250);
     $.post("PHP/updateSubject.php", {subjectSN: val}).done(function (data) {
 //"<q>".$subjectID."</q><w>".$SubjectName."</w><e>".$subjectclass."</e>";
+        //alert(data);
         var div = document.createElement("div");
         var content = data;
         div.innerHTML = content;
+        var subjectcode = div.getElementsByTagName("v")[0];
         var subjectName = div.getElementsByTagName("q")[0];
         var SubjectClass = div.getElementsByTagName("w")[0];
         var subjectTeacherID = div.getElementsByTagName("e")[0];
         var subjectTeacher = div.getElementsByTagName("f")[0];
-        var SNDetail = div.getElementsByTagName("g")[0];
+        //var SNDetail = div.getElementsByTagName("g")[0];
+        //alert(SNDetail);
+        document.getElementById("subjectSNDetail").innerHTML = val;
+        document.getElementById("updatesubjectcode").value = subjectcode.innerText;
         document.getElementById("updatesubjectname").value = subjectName.innerText;
         document.getElementById("updatesubjectclass").value = SubjectClass.innerText;
         document.getElementById("assignSubjectTeacherID").value = subjectTeacherID.innerText;
         document.getElementById("assignSubjectTeacher").value = subjectTeacher.innerText;
-        document.getElementById("subjectSNDetail").innerHTML = SNDetail.innerText;
+    });
+}
+
+function updateSubjectcollege(val) {
+    alert(val);
+    $("#updatesubject").show(250);
+    $.post("PHP/updateSubject.php", {subjectSN: val}).done(function (data) {
+//"<q>".$subjectID."</q><w>".$SubjectName."</w><e>".$subjectclass."</e>";
+        //alert(data);
+        var div = document.createElement("div");
+        var content = data;
+        div.innerHTML = content;
+        var subjectcode = div.getElementsByTagName("v")[0];
+        var subjectName = div.getElementsByTagName("q")[0];
+        var SubjectClass = div.getElementsByTagName("w")[0];
+        var subjectTeacherID = div.getElementsByTagName("e")[0];
+        var subjectTeacher = div.getElementsByTagName("f")[0];
+        //var SNDetail = div.getElementsByTagName("g")[0];
+        //alert(SNDetail);
+        document.getElementById("subjectSNDetail").innerHTML = val;
+        document.getElementById("updatesubjectcode").value = subjectcode.innerText;
+        document.getElementById("updatesubjectname").value = subjectName.innerText;
+        document.getElementById("updatesubjectclass").value = SubjectClass.innerText;
+        document.getElementById("assignSubjectTeacherID").value = subjectTeacherID.innerText;
+        document.getElementById("assignSubjectTeacher").value = subjectTeacher.innerText;
     });
 }
 
@@ -1429,6 +2309,7 @@ function checDD() {
 }
 
 function AddTeacher() {
+    var stafftype = document.getElementById("teachertype").value;
     var name = document.getElementById("teacherName").value;
     var phone = document.getElementById("teacherphone").value;
     var credential = document.getElementById("teachercredential").value;
@@ -1437,7 +2318,7 @@ function AddTeacher() {
     if (name < 1 || phone < 1 || credential < 1 || address < 1 || email < 4) {
         document.getElementById("addTnotification").innerHTML = "<font style='color:#ff0000'>Fill all fields</font>";
     } else {
-        $.post("PHP/addSubjectteacher.php", {name: name, email: email, phone: phone, credential: credential, address: address}).done(function (data) {
+        $.post("PHP/addSubjectteacher.php", {name: name, stafftype: stafftype, email: email, phone: phone, credential: credential, address: address}).done(function (data) {
 //console.log(data);
             alert(data);
         });
@@ -1569,6 +2450,7 @@ function getTeacherInfo(id) {
         var phone = div.getElementsByTagName("e")[0];
         var address = div.getElementsByTagName("r")[0];
         var names = div.getElementsByTagName("t")[0];
+        var password = div.getElementsByTagName("v")[0];
         document.getElementById("sName").innerHTML = id;
         //uNames
         document.getElementById("uTNames").value = names.innerText;
@@ -1576,6 +2458,7 @@ function getTeacherInfo(id) {
         document.getElementById("uTNumber").value = phone.innerText;
         document.getElementById("uTCredential").value = credential.innerText;
         document.getElementById("uTAddress").value = address.innerText;
+        document.getElementById("uTPassword").value = password.innerText;
     });
 }
 
@@ -1586,7 +2469,8 @@ function updateTeacher() {
     var sSNumber = document.getElementById("uTNumber").value;
     var sCredential = document.getElementById("uTCredential").value;
     var sAddress = document.getElementById("uTAddress").value;
-    $.post("PHP/updatestaff.php", {sID: id, sName: sName, sEmail: sEmail, sNumber: sSNumber, sCredential: sCredential, sAddress: sAddress}).done(function (data) {
+    var uTPassword = document.getElementById("uTPassword").value;
+    $.post("PHP/updatestaff.php", {sID: id, uTPassword: uTPassword, sName: sName, sEmail: sEmail, sNumber: sSNumber, sCredential: sCredential, sAddress: sAddress}).done(function (data) {
         console.log(data);
         if (data === "1") {
             alert("Updated successfully");

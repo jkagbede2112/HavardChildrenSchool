@@ -5,21 +5,39 @@
  * komooo@gmail.com
  */
 
-$(document).ready(function () {
-    eventsDash();
-});
 
 function _(e) {
     return document.getElementById(e);
 }
 
+function loginportal(){
+    var portalusername = document.getElementById("username").value;
+    var portalpassword = document.getElementById("password").value;
+    
+    //console.log(portalusername + " " + portalpassword);
+    $.post("../schoolPortal/PHP/login.php",{username:portalusername, password:portalpassword}).done(function(data){
+        if (data === "1"){
+            window.location = "dashboard.php";
+        }
+        
+        if (data === "0"){
+            alert("Verify your your email. click on the verify link in your email..");
+        }
+        
+        if (data=== "-1"){
+            alert("Invalid Username and password");
+        }
+    });
+}
+
 function payhist(val) {
+    //alert(val);
     var term = _("csfT").value;
     var sess = _("csfS").value;
 
-    document.getElementById("mycresult").innerHTML = "<tr style='font-weight:bold; color:#238B69'><td></td><td>Payment Desc</td><td>Amount</td><td>ReceiptID</td><td>Date</td><td>Bank</td><td>Teller Number</td></tr>";
+    //document.getElementById("mycresult").innerHTML = "<tr style='font-weight:bold; color:#238B69'><td></td><td>Payment Desc</td><td>Amount</td><td>ReceiptID</td><td>Date</td><td>Bank</td><td>Teller Number</td></tr>";
     $.post("PHP/getpaymenthistory.php", {val: val, term: term, session: sess}).done(function (data) {
-        document.getElementById("mycresult").innerHTML += data;
+        document.getElementById("mycresult").innerHTML = data;
         getBalance(val,term,sess);
     });
 }
@@ -52,13 +70,12 @@ function preregisteration(){
 
 function attachstudents(parentID) {
     var studentID = document.getElementById("attachstudentID").value;
-    if (studentID.length < 6 || studentID.length > 6) {
+    if (studentID.length < 2) {
         alert("Invalid ID");
     } else {
-        $parentID = parentID;
+        var parentID = parentID;
         $.post("PHP/attachstudent.php", {studentID: studentID, parentID: parentID}).done(function (data) {
             document.getElementById("servermessage").innerHTML = data;
-            alert(data);
         });
     }
 }
@@ -81,7 +98,6 @@ function getnl(sender) {
     $("#messages").hide();
      $(".messages").removeClass("activeportal");
     $("#newslettersmsg").addClass("activeportal");
-   
     
     ratifiedtimetable();
     document.getElementById("sentNewsletters").innerHTML = "<tr style='background-color:#D0E0E8'><th>Subject</th><th>Date sent</th></tr>";
@@ -105,8 +121,8 @@ function statistics() {
     });
 }
 
-function retrieveApproved(parentID) {
-    $.post("PHP/approvedattachment.php", {parentID: parentID}).done(function (data) {
+function retrieveApproved() {
+    $.post("PHP/approvedattachment.php").done(function (data) {
         document.getElementById("registeredstudents").innerHTML = data;
     });
 }
@@ -202,6 +218,7 @@ function showPage(wts, active) {
     $(wts).show();
     $(".pportal").removeClass("activemenu");
     $(active).addClass("activemenu");
+    eventsDash();
     //showPage('#messageboardmenucontent', '#messageboard')msgprecursor
 }
 
@@ -299,6 +316,7 @@ function showonly(whattoshow, idupdate) {
     $(whattoshow).show();
 
     if (whattoshow === "#viewstudent") {
+        //retrieveApproved();
         loadstudentscombo();
     }
     $(".portalsubmenu").removeClass("activeportal");
@@ -306,10 +324,11 @@ function showonly(whattoshow, idupdate) {
 }
 
 function loadstudentscombo() {
+    //alert("Hi stdcombo");
     loadstudentsIDcombo();
     $.post("PHP/loadstudentscombo.php").done(function (data) {
         document.getElementById("registeredstudents").innerHTML = data;
-        document.getElementById("registeredstudentsre").innerHTML = data;
+        //document.getElementById("registeredstudentsre").innerHTML = data;
         //registeredstudents
     });
 }
@@ -332,7 +351,7 @@ function getID(whatid) {
 
 function loadstudentinfo() {
     $("#HWA").show();
-    var studentID = document.getElementById("registeredstudentsID").value;
+    var studentID = document.getElementById("registeredstudents").value;
     $.post("PHP/getstudentinfo.php", {studentID: studentID}).done(function (data) {
         document.getElementById("studentinfotable").innerHTML = data;
         getassignment(studentID);
@@ -340,6 +359,7 @@ function loadstudentinfo() {
 }
 
 function getassignment(studentid) {
+    //alert(studentid);
     $.post("PHP/getassignment.php", {studentID: studentid}).done(function (data) {
         document.getElementById("assignedhw").innerHTML = data;
     });

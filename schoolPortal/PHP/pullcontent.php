@@ -7,8 +7,8 @@ include 'databaseSQLconnectn.php';
  */
 $SN = $_POST['SN'];
 
-$getsenderid = mysql_query("select MessageContent from portalmessage where SN='$SN'");
-mysql_query("update portalmessage set status='1' where SN ='$SN'");
-$pull = mysql_fetch_array($getsenderid);
+$getsenderid = mysqli_query($w,"select MessageContent from portalmessage where SN='$SN'");
+mysqli_query($w,"update portalmessage set status='1' where SN ='$SN'");
+$pull = mysqli_fetch_array($getsenderid);
 
 echo $pull['MessageContent'];

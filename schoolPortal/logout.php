@@ -1,10 +1,9 @@
 <?php
 session_start();
-$parentName = $_SESSION['ParentName'];
-
+$f = $_SESSION['Role'];
 session_destroy();
+header("Location:index.php");
 
-header('location:index.php');
 /* 
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates

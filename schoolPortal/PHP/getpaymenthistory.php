@@ -12,12 +12,12 @@ $curr_term = $_POST['term'];
 
 //echo $curr_session . " " . $curr_term;
 
-$asd = mysql_query("select * from fee_transaction where student_id='$val' and Session='$curr_session' and Term='$curr_term' order by date desc");
+$asd = mysqli_query($w,"select * from fee_transaction where student_id='$val' and Session='$curr_session' and Term='$curr_term' order by date desc");
 $count = 1;
-while ($a = mysql_fetch_array($asd)){
+while ($a = mysqli_fetch_array($asd)){
     echo "<tr style=''><td style='font-weight:bold; color:#A88302'>".$count."</td><td>".$a['description']."</td><td><strike>N</strike>".$a['amount']."</td><td>".$a['receiptID']."</td><td>".$a['date']."</td><td style='color:#005E8A'>".$a['Bank']."</td><td>".$a['TellerNumber']."</td></tr>";
 $count++;
 }
-if (mysql_num_rows($asd)<1){
+if (mysqli_num_rows($asd)<1){
     echo "<tr><td colspan='7' style='color:#ff0000; text-align:center'>No payment records found</td></tr>";
 }

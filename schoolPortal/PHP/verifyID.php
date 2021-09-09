@@ -22,13 +22,13 @@ if ($parentID . length < 9 || $parentID . length > 9) {
 }
 
 $statement = "update parentsregister set status='1' where ParentID = '$parentID'";
-$update = mysql_query($statement);
+$update = mysqli_query($w,$statement);
 
 if ($update) {
     $retrieve = "select * from parentsregister where ParentID='$parentID'";
-    $retrieveDetails = mysql_query($retrieve);
+    $retrieveDetails = mysqli_query($w,$retrieve);
     if ($retrieveDetails) {
-        $pull = mysql_fetch_array($retrieveDetails);
+        $pull = mysqli_fetch_array($retrieveDetails);
         $parentName = $pull['ParentName'];
         $parentEmail = $pull['Email'];
 

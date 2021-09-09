@@ -13,12 +13,12 @@ if ($sender === 'students') {
     $GMmessage = validatemessage('GMmessage');
 
     if ($GMclass === "Everyone") {
-        $sql = mysql_query("select EmailAddress from studentinfo");
+        $sql = mysqli_query($w, "select EmailAddress from studentinfo");
     } else {
-        $sql = mysql_query("select EmailAddress from schstudent where ClassID='$GMclass'");
+        $sql = mysqli_query($w, "select EmailAddress from schstudent where ClassID='$GMclass'");
     }
     $count = 0;
-    while ($getter = mysql_fetch_array($sql)) {
+    while ($getter = mysqli_fetch_array($sql)) {
         $emailaddress = $getter['EmailAddress'];
         $headers = 'MIME-Version: 1.0' . "\r\n";
         $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
@@ -33,17 +33,23 @@ if ($sender === 'students') {
 
     echo $count . " people messaged.";
 } elseif ($sender === 'staff') {
-    $sql = mysql_query("select * from schstaff");
+    $sql = mysqli_query($w, "select * from schstaff");
     $count = 0;
     
     $subject = validate('Tsubject');
     $content = validate('Tmessage');
-    
-    while ($getter = mysql_fetch_array($sql)) {
-        ++$count;
+    $email ="";
+    while ($getter = mysqli_fetch_array($sql)) {
         $emailaddress = $getter['StaffEmail'];
-        sendmail($emailaddress,$subject,$content);
+            $headers = 'MIME-Version: 1.0' . "\r\n";
+            $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+
+            if ($emailaddress) {
+                ++$count;
+                $email .= $emailaddress.",";
+            }
     }
+    mail($email, $subject, $content, $headers);
     
     echo $count . " staff messaged.";
 } elseif ($sender === 'parents') {
@@ -59,8 +65,6 @@ if ($sender === 'students') {
             $emailaddress = $getter['Email'];
             $headers = 'MIME-Version: 1.0' . "\r\n";
             $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-            $headers .= 'From: Sunshine Schools <info@sunshineschools.com>';
-            $headers .= 'Reply-To: School Administrator <admin@sunshineschools.com>';
 
             if ($emailaddress) {
                 $mailer = mail($emailaddress, $Psubject, $Pmessage, $headers);

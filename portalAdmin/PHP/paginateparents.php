@@ -8,8 +8,8 @@ $p = $_POST['pV'];
 $offset = 0;
 if ($p === "1") {
     $count = 0;
-    $limit = 5;
-    $off = 5;
+    $limit = 10;
+    $off = 10;
 
         $query = mysqli_query($w,"select * from parentsregister");
         $num = mysqli_num_rows($query);
@@ -29,7 +29,7 @@ if ($p === "1") {
     //$off = 2;
     $numtoshow = 5;
 
-    $query = mysqli_query($w,"select * from parentsregister limit $limit offset $off");
+    $query = mysqli_query($w,"select * from parentsregister order by ParentSurname ASC limit $limit offset $off");
 
     while ($rez1 = mysqli_fetch_array($query)) {
         if ($rez1['emailnotification'] === "1") {
@@ -50,6 +50,6 @@ if ($p === "1") {
         $qry = mysqli_query($w,"select * from linkages where ParentID='$pID' and Status = '1'");
         $n = mysqli_num_rows($qry);
 
-        echo "<td>" . $rez1['ParentName'] . "</td><td>" . $notification . "</td><td>" . $rez1['phoneNumber'] . "</td><td>" . $rez1['Email'] . "</td><td>" . $status . "</td><td>".$n."/" . $linkages . " <a style=\"padding:1px\" class=\"btn\" data-toggle='modal' data-target='.bs-example-modal-sm' onclick =\"viewAttaches('$pID')\">View</a></td></tr>";
+        echo "<td>" . $rez1['ParentName'] . "</td><td>" . $notification . "</td><td>" . $rez1['PhoneNumber'] . "</td><td>" . $rez1['Email'] . "</td><td>" . $status . "</td><td>".$n."/" . $linkages . " <a style=\"padding:1px\" class=\"btn\" data-toggle='modal' data-target='#viewPattaches' onclick =\"viewAttaches('$pID')\">View</a> <a style='cursor:pointer' onclick =\"updatepars('$pID')\">Update</a></td></tr>";
     }
 }

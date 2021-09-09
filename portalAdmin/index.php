@@ -7,9 +7,9 @@ error_reporting(0);
 $role = $_SESSION['Role'];
 if ($role === "Teacher") {
     header('location:PortalTeachers.php');
-}elseif($role === "Admin"){
+} elseif ($role === "Admin") {
     header('location:dashboard.php');
-} elseif($role === "Bursar") {
+} elseif ($role === "Bursar") {
     header('location:schoolbursar.php');
 }
 ?>
@@ -171,7 +171,7 @@ if ($role === "Teacher") {
 
         <div class="clearfix">
             <div class="pull-left menuitems" style="width:100px; background-color:#009CE8; min-height:100%; position:fixed; overflow-x: hidden; background-image: url('../images/background.jpg')">
-
+                <center><img src="../images/schoollogo.png" width="80px" style="margin-top:10px"></center>
             </div>
             <div class="pull-right" style="width:calc(100% - 100px); background-color:#D0E0E8; min-height:100%">
                 <div class="clearfix" style="height:50px; background-color:#005E8A; border-bottom-style: solid; border-bottom-width:thin; border-bottom-color:#000; box-shadow:0px 0px 1px #000">
@@ -179,7 +179,6 @@ if ($role === "Teacher") {
 
                 </div>
                 <div style="height:30px; color:#E3EDF2; font-size:12px; padding:7px; background-image: url('../images/background.jpg'); margin-bottom:20px; box-shadow:0px 0px 1px #000">
-                    FlashCards plugin now available ( Learn more - Request plugin )
                 </div>
                 <div style='margin:20px'>
                     <div class='row' style='margin:0px;' id="messages">
@@ -194,7 +193,7 @@ if ($role === "Teacher") {
                                     </div>
                                     <div style="font-size:17px; padding:20px; min-height: 240px; background-color:rgba(255,255,255,0.4); position:relative">
                                         <span style="position:absolute; top:10px; right:10px; font-size:12px; font-family:verdana" id="logininfo">
-                                           
+
                                         </span>
                                         <div style="min-height:200px">
                                             <span style="font-size:13px; font-family:montserrat, verdana" class="clearfix">

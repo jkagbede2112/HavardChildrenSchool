@@ -12,8 +12,8 @@ error_reporting(0);
 $username = $_POST['username'];
 $password = $_POST['password'];
 
-$loginquery = mysql_query("select * from parentsregister where Email = '$username' and Password = '$password'");
-$fetch = mysql_fetch_array($loginquery);
+$loginquery = mysqli_query($w,"select * from parentsregister where Email = '$username' and Password = '$password'");
+$fetch = mysqli_fetch_array($loginquery);
 
 if ($fetch) {
     $ParentID = $fetch['ParentID'];
@@ -22,24 +22,17 @@ if ($fetch) {
     $PhoneNumber = $fetch['phoneNumber'];
     $emailsubscription = $fetch['emailnotification'];
     $newslettersubscription = $fetch['newslettersubscription'];
-    $status = $fetch['status'];
-
-    if ($status === "0") {
-        echo "0";
-    } else {
-        session_start();
-        $_SESSION['ParentName'] = $ParentName;
-        $_SESSION['Email'] = $Email;
-        $_SESSION['PhoneNumber'] = $PhoneNumber;
-        $_SESSION['ParentID'] = $ParentID;
+    
+    session_start();
+    $_SESSION['ParentName'] = $ParentName;
+    $_SESSION['Email'] = $Email;
+    $_SESSION['PhoneNumber'] = $PhoneNumber;
+    $_SESSION['ParentID'] = $ParentID;
         $_SESSION['emailsubscription'] = $emailsubscription;
-        $_SESSION['newsletters'] = $newslettersubscription;
-
-        echo "1";
-    }
+    $_SESSION['newsletters'] = $newslettersubscription;
+    
+    echo "success";
+    
 } else {
-    echo "-1";
+    echo "Invalid Username/Password";
 }
-//-1 = Invalid username/password.
-//1 = succes 
-// 0 = verify your email

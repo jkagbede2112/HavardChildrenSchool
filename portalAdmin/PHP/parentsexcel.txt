@@ -1,0 +1,10 @@
+<?php
+
+ob_start();
+ob_get_flush();
+header ( "Content-type: application/vnd.ms-excel" );
+header ( "Content-Disposition: attachment; filename=havardparents.xls" ); 
+
+
+
+?>
